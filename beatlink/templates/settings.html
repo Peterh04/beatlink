@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .bg-cover {
+            background-image: url('{% static "s2.png" %}');
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-cover h-screen flex flex-col items-center justify-center">
+    <div class="w-full max-w-xs px-6 bg-white bg-opacity-80 rounded-lg shadow-lg p-8">
+        <!-- Back Icon -->
+        <a href="/" class="text-black text-3xl">&larr;</a>
+
+        <div class="mb-10 flex flex-col items-center">
+            <img src="{% static 'beatlink.png' %}" alt="BeatLink Logo" class="w-32 h-32">
+            <h1 class="text-4xl text-black font-bold mt-4">BeatLink</h1>
+        </div>
+
+        <div>
+            <style>
+                h5 {
+                    color: red;
+                }
+            </style>
+            <!-- Display error messages here if needed -->
+            {% for message in messages %}
+            <h5>{{ message }}</h5>
+            {% endfor %}
+        </div>
+
+        <!-- Settings form -->
+        <form action="/update_credentials/" method="POST" class="px-8 pt-6 pb-8 mb-4">
+            {% csrf_token %}
+            <div class="mb-4">
+                <input class="bg-gray-100 text-black border border-gray-300 rounded py-2 px-4 block w-full appearance-none leading-normal" type="text" name="new_name" placeholder="New Name">
+            </div>
+            <div class="mb-4">
+                <input class="bg-gray-100 text-black border border-gray-300 rounded py-2 px-4 block w-full appearance-none leading-normal" type="email" name="new_email" placeholder="New Email">
+            </div>
+            <div class="mb-4">
+                    <input class="bg-gray-100 text-black border border-gray-300 rounded py-2 px-4 block w-full appearance-none leading-normal" type="password" name="current_password" placeholder="Current Password" required>
+            </div>
+            <div class="mb-6">
+                <input class="bg-gray-100 text-black border border-gray-300 rounded py-2 px-4 block w-full appearance-none leading-normal" type="password" name="new_password" placeholder="New Password">
+            </div>
+            <button type="submit" class="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded w-full mb-4">Save</button>
+        </form>
+
+        <!-- Footer -->
+        <p class="text-center text-gray-500 text-xs mt-4">
+            &copy; BeatLink 2024
+        </p>
+    </div>
+</body>
+</html>
+

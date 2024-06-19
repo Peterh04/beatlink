@@ -1,0 +1,245 @@
+/* style.css */
+
+html{
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    height:  100%;
+   
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    
+    padding: 20px 0;
+}
+
+.sidebar a{
+    text-decoration: none;
+    color: inherit;
+    display: block;
+   
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.logo-container {
+    text-align: center;
+}
+
+.logo-container img {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.sidebar-section {
+    background: #181818;
+    border-radius: 10px;
+    padding: 15px;
+    padding-right: 6px;
+    margin-bottom: 9px;
+    overflow: hidden;
+    margin-right: 10px;
+    margin-left: 5px;
+}
+
+.sidebar-link {
+    display: block;
+    padding: 10px 0;
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.3s;
+    align-items: center;
+    margin-bottom: 10px;
+    
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+    background: #333;
+}
+
+.sidebar-link-icon {
+    margin-right: 10px;
+}
+
+.music-player {
+    margin-left: 240px;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - 90px);
+    position: relative;
+    background: #121212;
+}
+
+.player-container {
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.album-cover {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 20px;
+}
+
+.song-info {
+    margin-bottom: 20px;
+}
+
+.song-title, .artist-name {
+    margin: 0;
+}
+
+.player-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-left: 90px;
+    
+}
+
+.control-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.control-btn:hover {
+    color: #ccc;
+}
+.volume-bar {
+    height: 150px; /* Set the height of the vertical volume bar */
+    width: 10px; /* Set the width of the vertical volume bar */
+    background: #fff;
+    border-radius: 5px;
+    position: relative;
+    display: none;
+}
+
+.volume-level {
+    width: 100%;
+    background:  #333;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 0; /* Align the volume level to the bottom */
+}
+.progress-bar {
+    width: 100%;
+    height: 5px;
+    background:  #333;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.progress {
+    height: 100%;
+    background: #fff;
+    border-radius: 5px;
+    width: 0;
+}
+
+.time-stamps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+/* Fullscreen Button */
+#fullscreen-btn {
+    font-size: 24px;
+    margin-left: auto;
+}
+
+/* Fullscreen mode */
+body:-webkit-full-screen {
+    background: #121212;
+}
+
+body:-ms-fullscreen {
+    background: #121212;
+}
+
+body:fullscreen {
+    background: #121212;
+}
+.fullscreen-mode .sidebar {
+    display: none;
+}
+
+.control-btn.active {
+    color: green;
+}
+
+/* Search Bar Styles */
+.search-bar {
+    background-color: #fff;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin: 20px 0;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2a2a2a;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 0 0px;
+}
+
+.search-bar input[type="search"] {
+  flex-grow: 1;
+  background-color: transparent;
+  border: none;
+  padding-left: 20px;
+  padding-right: 20px;
+  color: #fff;
+  outline: none;
+  font-size: 18px; /* Increase font size for bigger appearance */
+}
+
+.search-bar button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.search-title {
+  color: #fff;
+  font-size: 22px;
+  padding-top: 20px;
+}
+
+.liked {
+    color: red;
+}
+

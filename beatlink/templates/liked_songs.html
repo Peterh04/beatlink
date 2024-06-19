@@ -1,0 +1,206 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatLink - Liked Songs</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <style>
+        /* Custom CSS for the Liked Songs page */
+        .sidebar {
+            width: 240px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            padding: 20px 0;
+            z-index: 1; /* Ensure sidebar is above other content */
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: auto;
+        }
+
+        .sidebar-section {
+            margin-top: 20px;
+            padding-left: 10px;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 10px 0;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .sidebar-link-icon {
+            margin-right: 10px;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: #333;
+        }
+
+        .music-content {
+            margin-left: 240px; /* Adjust based on sidebar width */
+            padding: 20px;
+        }
+
+        .browse-all {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .category-card {
+            width: 150px; /* Adjust the width as needed */
+            margin: 10px;
+            display: inline-block; /* Make the cards inline */
+            vertical-align: top; /* Align cards to the top */
+            text-align: center;
+            position: relative; /* For positioning the checkbox */
+        }
+
+        .category-card a {
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .category-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .category-title {
+            font-size: 14px;
+        }
+
+        /* Checkbox style */
+        .song-checkbox {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: none;
+        }
+
+        /* Remove button style */
+        #remove-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Media query for smaller screens */
+        @media only screen and (max-width: 768px) {
+            .music-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <!-- Sidebar content -->
+        <div class="logo-container">
+            <img src="{% static 'beatlink.png' %}" alt="Spotify Logo">
+        </div>
+
+        <div class="sidebar-section">
+            <a href="/" class="sidebar-link">
+                <span class="sidebar-link-icon">🏠</span>
+                Home
+            </a>
+            <a href="/search" class="sidebar-link">
+                <span class="sidebar-link-icon">🔍</span>
+                Search
+            </a>
+           
+            <a href="/liked_songs" class="sidebar-link active">
+                <span class="sidebar-link-icon">❤️</span>
+                Liked Songs
+            </a>
+        </div>
+    </div>
+
+    <!-- Remove button -->
+    <button id="remove-button" onclick="toggleCheckboxes()">
+        <span class="sidebar-link-icon" id="remove-icon">🗑️</span>
+    </button>
+
+    <div class="music-content">
+        <div class="browse-all">
+            {% for song in liked_songs %}
+            <div class="category-card">
+                <input type="checkbox" class="song-checkbox" data-track-id="{{ song.track_id }}">
+                <a href="/music/{{ song.track_id }}">
+                    <img src="{{ song.cover_url }}" alt="{{ song.track_name }}"onerror="this.onerror=null;this.src='https://www.theaudiostore.in/cdn/shop/articles/Why_Does_Music_Sound_Better_at_Night_Exploring_the_Science_behind_the_Phenomenon_600x600_crop_center.png?v=1681157018';">
+                    <div class="category-title">{{ song.track_name }}</div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function toggleCheckboxes() {
+            const checkboxes = document.querySelectorAll('.song-checkbox');
+            const removeIcon = document.getElementById('remove-icon');
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.style.display === 'none') {
+                    checkbox.style.display = 'block';
+                    removeIcon.innerText = '❌'; // Change icon to 'X'
+                } else {
+                    checkbox.style.display = 'none';
+                    removeIcon.innerText = '🗑️'; // Change icon back
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const removeButton = document.getElementById('remove-button');
+
+            removeButton.addEventListener('click', function() {
+                const checkboxes = document.querySelectorAll('.song-checkbox:checked');
+                checkboxes.forEach(function(checkbox) {
+                    const trackId = checkbox.getAttribute('data-track-id');
+                    // Send an AJAX request to delete the song from the database
+                    fetch(`/delete_song/${trackId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // If the deletion was successful, remove the card from the DOM
+                            checkbox.closest('.category-card').remove();
+                            console.log(`Song with track ID ${trackId} has been deleted.`);
+                        } else {
+                            console.error(`Failed to delete song with track ID ${trackId}.`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error occurred while deleting the song:', error);
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
