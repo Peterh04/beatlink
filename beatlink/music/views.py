@@ -19,7 +19,7 @@ def top_artists():
     querystring = {"type":"weekly"}
 
     headers = {
-        "x-rapidapi-key": "70347a8a9fmsh4f21c9adcf9f3b8p1d1765jsn3e3ef1c2eb95",
+        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
         "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
     }
 
@@ -45,7 +45,7 @@ def top_tracks():
     querystring = {"type":"weekly"}
 
     headers = {
-        "x-rapidapi-key": "70347a8a9fmsh4f21c9adcf9f3b8p1d1765jsn3e3ef1c2eb95",
+        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
         "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
     }
 
@@ -164,7 +164,7 @@ def get_audio_etails(query):
     querystring = {"track": query}
 
     headers = {
-        "x-rapidapi-key": "70347a8a9fmsh4f21c9adcf9f3b8p1d1765jsn3e3ef1c2eb95",
+        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
         "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
     }
 
@@ -201,7 +201,7 @@ def music(request, pk):
     querystring = {"trackId": track_id}
 
     headers = {
-        "x-rapidapi-key": "70347a8a9fmsh4f21c9adcf9f3b8p1d1765jsn3e3ef1c2eb95",
+        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
         "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
     }
 
@@ -246,7 +246,7 @@ def search(request):
         querystring = {"term":search_query, 'type': 'track'}
 
         headers = {
-            "x-rapidapi-key": "70347a8a9fmsh4f21c9adcf9f3b8p1d1765jsn3e3ef1c2eb95",
+            "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
             "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
         }
 
@@ -367,4 +367,4 @@ def delete_song(request, track_id):
         return JsonResponse({'error': 'Only DELETE requests are allowed'}, status=405)
     
     
-    #70347a8a9fmsh4f21c9adcf9f3b8p1d1765jsn3e3ef1c2eb95
+    #e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2
