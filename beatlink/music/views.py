@@ -11,16 +11,20 @@ from django.contrib.auth import update_session_auth_hash
 from .models import LikedSong
 from django.views.decorators.csrf import csrf_exempt
 import json
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Create your views here.
 def top_artists():
-    url = "https://spotify-scraper.p.rapidapi.com/v1/chart/artists/top"
+    url = f"{os.getenv('API_BASE_URL')}chart/artists/top"
 
     querystring = {"type":"weekly"}
 
     headers = {
-        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
-        "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
+        "x-rapidapi-key": f"{os.getenv("API_KEY")}",
+        "x-rapidapi-host": f"{os.getenv('RAPID_API_HOST')}"
     }
 
     response = requests.get(url, headers=headers, params=querystring)
@@ -40,13 +44,13 @@ def top_artists():
 def top_tracks():
     
 
-    url = "https://spotify-scraper.p.rapidapi.com/v1/chart/tracks/top"
+    url = f"{os.getenv('API_BASE_URL')}chart/tracks/top"
 
     querystring = {"type":"weekly"}
 
     headers = {
-        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
-        "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
+        "x-rapidapi-key": f"{os.getenv("API_KEY")}",
+        "x-rapidapi-host": f"{os.getenv('RAPID_API_HOST')}"
     }
 
     response = requests.get(url, headers=headers, params=querystring)
@@ -156,16 +160,16 @@ def get_track_image(track_id, track_name):
 
     return url_640w
 
-def get_audio_etails(query):
+def get_audio_details(query):
 
 
-    url = "https://spotify-scraper.p.rapidapi.com/v1/track/download"
+    url = f"{os.getenv('API_BASE_URL')}track/download/soundcloud"
 
     querystring = {"track": query}
 
     headers = {
-        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
-        "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
+        "x-rapidapi-key": f"{os.getenv("API_KEY")}",
+        "x-rapidapi-host": f"{os.getenv('RAPID_API_HOST')}"
     }
 
     response = requests.get(url, headers=headers, params=querystring)
@@ -174,14 +178,15 @@ def get_audio_etails(query):
     if response.status_code == 200:
         response_data = response.json()
 
-        if 'youtubeVideo' in response_data and 'audio' in response_data['youtubeVideo']:
-            audio_list = response_data['youtubeVideo']['audio']
+        if 'soundcloudTrack' in response_data and 'audio' in response_data['soundcloudTrack']:
+            audio_list = response_data['soundcloudTrack']['audio']
             if audio_list:
                 first_audio_url = audio_list[0]['url']
                 duration_text = audio_list[0]['durationText']
 
                 audio_details.append(first_audio_url)
                 audio_details.append(duration_text)
+                print(first_audio_url)
             else:
                 print("No audio data availble")
         else:
@@ -197,12 +202,13 @@ def get_audio_etails(query):
 def music(request, pk):
     track_id = pk
 
-    url = "https://spotify-scraper.p.rapidapi.com/v1/track/metadata"
+    url = f"{os.getenv('API_BASE_URL')}track/metadata"
     querystring = {"trackId": track_id}
 
+
     headers = {
-        "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
-        "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
+        "x-rapidapi-key": f"{os.getenv("API_KEY")}",
+        "x-rapidapi-host": f"{os.getenv('RAPID_API_HOST')}"
     }
 
     response = requests.get(url, headers=headers, params=querystring)
@@ -215,7 +221,7 @@ def music(request, pk):
         first_artist_name = artists_list[0].get("name") if artists_list else "No artist found"
 
         audio_details_query = track_name + first_artist_name
-        audio_details = get_audio_etails(audio_details_query)
+        audio_details = get_audio_details(audio_details_query)
         audio_url = audio_details[0]
         duration_text = audio_details[1]
 
@@ -230,6 +236,7 @@ def music(request, pk):
             'track_image': track_image,
         }
         return render(request, 'music.html', context)
+    
     else:
         # Handle the case where the API request fails
         return HttpResponse("Failed to fetch track metadata", status=response.status_code)
@@ -241,13 +248,13 @@ def search(request):
     if request.method == 'POST':
         search_query = request.POST['search_query']
         
-        url = "https://spotify-scraper.p.rapidapi.com/v1/search"
+        url = f"{os.getenv('API_BASE_URL')}search"
 
         querystring = {"term":search_query, 'type': 'track'}
 
         headers = {
-            "x-rapidapi-key": "e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2",
-            "x-rapidapi-host": "spotify-scraper.p.rapidapi.com"
+            "x-rapidapi-key": f"{os.getenv("API_KEY")}",
+            "x-rapidapi-host": f"{os.getenv('RAPID_API_HOST')}"
         }
 
         response = requests.get(url, headers=headers, params=querystring)
@@ -265,6 +272,7 @@ def search(request):
                 artist_name = track["artists"][0]["name"]
                 duration = track["durationText"]
                 trackid = track["id"]
+                track_image= track["album"]["cover"][0]["url"]
                 
                 
                 track_list.append({
@@ -272,12 +280,13 @@ def search(request):
                     'artist_name': artist_name,
                     'duration': duration,
                     'trackid': trackid,
+                    'track_image': track_image
                     
                     
                    
                 })
         context = {
-            'search_results_count': search_results_count,
+            # 'search_results_count': search_results_count,
             'track_list': track_list,
         }
 
@@ -365,6 +374,3 @@ def delete_song(request, track_id):
             return JsonResponse({'error': 'Song not found'}, status=404)
     else:
         return JsonResponse({'error': 'Only DELETE requests are allowed'}, status=405)
-    
-    
-    #e82b48a991msh47bbd317e3aa921p17c1c4jsn6505b253a9f2
